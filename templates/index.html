@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket System</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Ticket System</h1>
+    </header>
+
+    <main>
+        <section id="ticket-form">
+            <h2>Submit a Ticket</h2>
+            <form action="/submit" method="post">
+                <label for="subject">Subject:</label>
+                <input type="text" id="subject" name="subject" required>
+
+                <label for="severity">Severity:</label>
+                <select id="severity" name="severity" required>
+                    <option value="SEV3">Low (Severity 3)</option>
+                    <option value="SEV2">Medium (Severity 2)</option>
+                    <option value="SEV1">High (Severity 1)</option>
+                </select>
+
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" rows="4" required></textarea>
+
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+
+        <section id="ticket-list">
+            <h2>Ticket List</h2>
+            <ul>
+                {% for ticket in tickets %}
+                <li>
+                    <form action="/delete" method="post">
+                        <input type="hidden" name="id" value="{{ ticket['ID'] }}">
+                        <h3>{{ ticket['Subject'] }} <button type="delete" class="delete-button">❌</button> </h3>
+                        <p>{{ ticket['Description'] }}</p>
+                        <p>ID:{{ ticket['ID'] }}</p>
+                        <p>Severity:{{ ticket['Severity'] }}</p>
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Ticket System</p>
+    </footer>
+</body>
+</html>
