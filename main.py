@@ -1,34 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for
 import json
-import os
-import pymongo
-import logging
+from config import PORT, JSON_FILE
+from database import collection, populate_db
+from logger import logger
+from tickets import tickets_cache, reload_cache
 
-# Constant
-PORT = 5000
-CONNECTION_STRING = os.getenv('MONGODB_CONNECTION_STRING')
-
-# Global Variables
-json_file = 'data.json'
-tickets_cache = []  # list of tickets
-client = pymongo.MongoClient(CONNECTION_STRING)
-db = client['pythondb']
-collection = db['tickets']
 app = Flask(__name__)
-
-# Configure the logger
-logging.basicConfig(
-    level=logging.DEBUG,  # Set the log level (e.g., INFO, DEBUG, WARNING)
-    # Define log message format
-    format='%(asctime)s [%(levelname)s] %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'  # Define date and time format
-)
-# Create a logger instance
-logger = logging.getLogger(__name__)
-
-
-def reload_cache(tickets_cache):
-    tickets_cache = collection.find({})  # sync cache with database
 
 
 @app.route("/")
@@ -88,32 +65,17 @@ def delete():
         return redirect(url_for("index"))
 
 
-def populate_db():
-    db_names = client.list_database_names()
-    python_db_exists = False
-    for db in db_names:
-        logger.debug("Following db exists: " + db)
-        if db == 'pythondb':
-            python_db_exists = True
-
-    if python_db_exists:
-        logger.debug("pythondb exists, no population needed!")
-    else:
-        result = collection.insert_many(tickets_cache)
-        logger.debug(result)
-
-
 if __name__ == "__main__":
     # Read data from the JSON file
     try:
-        with open(json_file, 'r') as file:
+        with open(JSON_FILE, 'r') as file:
             data = json.load(file)
             tickets_cache = data.get('Tickets', [])
     except FileNotFoundError:
-        logger.error(f"File '{json_file}' not found.")
+        logger.error(f"File '{JSON_FILE}' not found.")
     except json.JSONDecodeError as e:
         logger.error(f"Error decoding JSON: {e}")
 
     populate_db()
-    reload_cache(tickets_cache)
+    reload_cache(tickets_cache, collection)
     app.run(host="127.0.0.1", port=PORT, debug=True)
