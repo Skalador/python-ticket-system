@@ -13,7 +13,7 @@ On first startup the `MongoDB` will be checked for a database called `pythondb`.
 ## Prerequisites
 Installing dependencies:
 ```
-pip install flask pymongo
+pip install flask pymongo pytest
 ```
 Note: It might be required to upgrade the `watchdog` package for `flask`. `pip install --upgrade watchdog`
 
@@ -29,4 +29,12 @@ Linux: export MONGODB_CONNECTION_STRING="mongodb+srv://username:password@databas
 Run the code:
 ```
 python main.py
+```
+
+## Testing
+
+Tests are written with `pytest`.
+Running tests with output:
+```
+python -m pytest
 ```

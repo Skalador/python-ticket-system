@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for
 import json
+from os import environ
 from config import PORT, JSON_FILE
 from database import collection, populate_db
 from logger import logger
-from tickets import tickets_cache, reload_cache
+from tickets import tickets_cache, reload_cache, create_ticket
 
 app = Flask(__name__)
 
@@ -22,13 +23,8 @@ def submit():
         description = request.form.get("description")
 
         # Create a new ticket dictionary
-        new_ticket = {
-            "Subject": subject,
-            "Severity": severity,
-            "Description": description,
-            # Assign a unique ID based on the number of existing tickets
-            "ID": len(tickets_cache)
-        }
+        new_ticket = create_ticket(
+            subject, severity, description, tickets_cache)
         logger.info("Adding ticket: " + str(new_ticket))
 
         # Add the new ticket to the list of tickets
@@ -66,6 +62,10 @@ def delete():
 
 
 if __name__ == "__main__":
+    if environ.get('MONGODB_CONNECTION_STRING') is None:
+        logger.error(
+            "Conection String for MongoDB in environment variable MONGODB_CONNECTION_STRING not set!")
+        exit(1)
     # Read data from the JSON file
     try:
         with open(JSON_FILE, 'r') as file:
