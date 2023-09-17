@@ -10,6 +10,8 @@ The backend database is `MongoDB`. MongoDB is hosted for free on Atlas. The Data
 On first startup the `MongoDB` will be checked for a database called `pythondb`. If this database does not exist, then the database will be created and populated with the data from `data.json`.
 
 ## Demo
+https://github.com/Skalador/python-ticket-system/assets/117681263/6e8b62f5-dbab-4597-afc7-123226285602
+
 
 
 ## Prerequisites
