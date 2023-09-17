@@ -76,6 +76,6 @@ if __name__ == "__main__":
     except json.JSONDecodeError as e:
         logger.error(f"Error decoding JSON: {e}")
 
-    populate_db()
+    populate_db(tickets_cache)
     reload_cache(tickets_cache, collection)
     app.run(host="127.0.0.1", port=PORT, debug=True)

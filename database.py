@@ -1,14 +1,13 @@
 import pymongo
 from config import CONNECTION_STRING
 from logger import logger
-from tickets import tickets_cache
 
 client = pymongo.MongoClient(CONNECTION_STRING)
 db = client['pythondb']
 collection = db['tickets']
 
 
-def populate_db():
+def populate_db(tickets_cache):
     db_names = client.list_database_names()
     python_db_exists = False
     for db in db_names:
