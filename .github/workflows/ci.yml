@@ -21,7 +21,7 @@ jobs:
         pip install --no-cache-dir -r requirements.txt
     - name: Run Unit Tests with Pytest
       env:
-        MONGODB_CONNECTION_STRING: '${{ secrets.MONGODB_CONNECTION_STRING }}'
+        MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
       run: python -m pytest
       
   push_to_registry:
