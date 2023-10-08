@@ -13,13 +13,25 @@ On first startup the `MongoDB` will be checked for a database called `pythondb`.
 https://github.com/Skalador/python-ticket-system/assets/117681263/6e8b62f5-dbab-4597-afc7-123226285602
 
 
-
 ## Prerequisites
+
+### Install from requirements.txt
+
 Installing dependencies:
 ```
-pip install flask pymongo pytest
+pip install --no-cache-dir -r requirements.txt
 ```
 Note: It might be required to upgrade the `watchdog` package for `flask`. `pip install --upgrade watchdog`
+
+### Generate requirements.txt
+
+```
+# install
+pip install pipreqs
+
+# Run in current directory
+python -m  pipreqs.pipreqs .
+```
 
 ## Execute the code
 An environment variable `MONGODB_CONNECTION_STRING` is used for the database connectivity, thus the connection string is not exposed in the code itself.
@@ -42,3 +54,18 @@ Running tests with output:
 ```
 python -m pytest
 ```
+
+## Build the container image
+
+Build the image with the `latest` tag
+```
+docker build -t python-ticket-system .
+```
+
+## Run the container image
+
+Run the image with `docker` and use the environment variable `MONGODB_CONNECTION_STRING` 
+```
+docker run  -e "MONGODB_CONNECTION_STRING=$MONGODB_CONNECTION_STRING" -p 5000:5000 python-ticket-system
+```
+
